@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import { Action } from './Action';
+import type { ChangelogEntry } from './Changelog';
 
 async function run(): Promise<void> {
   const path = core.getInput('path') || undefined;
@@ -15,7 +16,7 @@ async function run(): Promise<void> {
   core.info(`Status: "${entry?.status ?? ""}"`);
   core.info(`Description:\n${entry?.description ?? ""}\n`);
 
-  let unreleasedEntry: any = undefined;
+  let unreleasedEntry: ChangelogEntry | undefined;
   if (version !== undefined) {
     unreleasedEntry = await new Action().run('unreleased', path);
     core.info(`Unreleased Version: "${unreleasedEntry?.version ?? ""}"`);
@@ -49,8 +50,9 @@ async function run(): Promise<void> {
 async function main(): Promise<void> {
   try {
     await run();
-  } catch (error) {
-    core.setFailed(error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    core.setFailed(message);
   }
 }
 

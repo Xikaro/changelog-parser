@@ -1,12 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "outDir": "./build/js",
     "rootDir": "./src",
     "strict": true,
     "noImplicitAny": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": [
+      "es2020"
+    ],
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules"

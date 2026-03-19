@@ -235,7 +235,7 @@ test('should throw error on undefined entry header', async () => {
   try {
     ChangelogParser.parseChangelog("## something");
   } catch (e) {
-    expect(e.message).toEqual("Could not parse CHANGELOG entry:\nsomething");
+    expect((e as Error).message).toEqual("Could not parse CHANGELOG entry:\nsomething");
   }
 });
 
@@ -260,6 +260,6 @@ test('should throw error on duplicated versions', async () => {
       "## 1.0.0 - 2020.10.10",
     ].join("\n"));
   } catch (e) {
-    expect(e.message).toEqual("Duplicated version in changelog: 1.0.0");
+    expect((e as Error).message).toEqual("Duplicated version in changelog: 1.0.0");
   }
 });
