@@ -27,8 +27,14 @@ outputs:
     description: 'Status from the changelog entry. Possibly one of the following: prerelease, release, unreleased'
   description:
     description: 'Description from the changelog entry'
-  unreleased:
-    description: 'Changelog entry for Unreleased version (version, status, description)'
+  hasUnreleased:
+    description: 'True if changelog has an Unreleased section, false otherwise'
+  unreleasedVersion:
+    description: 'Version from the Unreleased section (always "unreleased")'
+  unreleasedStatus:
+    description: 'Status from the Unreleased section (always "unreleased")'
+  unreleasedDescription:
+    description: 'Description from the Unreleased section'
 runs:
   using: 'node20'
   main: 'build/dist/index.js'

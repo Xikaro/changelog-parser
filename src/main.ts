@@ -16,20 +16,32 @@ async function run(): Promise<void> {
   core.info(`Status: "${entry?.status ?? ""}"`);
   core.info(`Description:\n${entry?.description ?? ""}\n`);
 
+  // Always check for unreleased section, but only output if version input is not 'unreleased'
   let unreleasedEntry: ChangelogEntry | undefined;
-  if (version !== undefined) {
+  try {
     unreleasedEntry = await new Action().run('unreleased', path);
-    core.info(`Unreleased Version: "${unreleasedEntry?.version ?? ""}"`);
-    core.info(`  Major: "${unreleasedEntry?.versionMajor ?? ""}"`);
-    core.info(`  Minor: "${unreleasedEntry?.versionMinor ?? ""}"`);
-    core.info(`  Patch: "${unreleasedEntry?.versionPatch ?? ""}"`);
-    core.info(`Date: "${unreleasedEntry?.date ?? ""}"`);
-    core.info(`Status: "${unreleasedEntry?.status ?? ""}"`);
-    core.info(`Description:\n${unreleasedEntry?.description ?? ""}\n`);
+  } catch {
+    // No unreleased section in changelog
+    unreleasedEntry = undefined;
+  }
+
+  const hasUnreleased = unreleasedEntry !== undefined;
+  const isUnreleasedRequested = version?.toLowerCase() === 'unreleased';
+
+  if (hasUnreleased) {
+    core.info(`Has Unreleased section: ${hasUnreleased}`);
+    if (!isUnreleasedRequested) {
+      core.info(`Unreleased Version: "${unreleasedEntry?.version ?? ""}"`);
+      core.info(`Status: "${unreleasedEntry?.status ?? ""}"`);
+      core.info(`Description:\n${unreleasedEntry?.description ?? ""}\n`);
+    }
+  } else {
+    core.info('No Unreleased section in changelog');
   }
 
   core.endGroup();
 
+  // Set main outputs
   core.setOutput('version', entry?.version ?? "");
   core.setOutput('versionMajor', entry?.versionMajor ?? "");
   core.setOutput('versionMinor', entry?.versionMinor ?? "");
@@ -38,12 +50,17 @@ async function run(): Promise<void> {
   core.setOutput('status', entry?.status ?? "");
   core.setOutput('description', entry?.description ?? "");
 
-  if (unreleasedEntry !== undefined) {
-    core.setOutput('unreleased', JSON.stringify({
-      version: unreleasedEntry.version ?? "",
-      status: unreleasedEntry.status ?? "",
-      description: unreleasedEntry.description ?? ""
-    }));
+  // Set unreleased outputs only if version input is not 'unreleased'
+  core.setOutput('hasUnreleased', hasUnreleased.toString());
+  if (!isUnreleasedRequested) {
+    core.setOutput('unreleasedVersion', unreleasedEntry?.version ?? "");
+    core.setOutput('unreleasedStatus', unreleasedEntry?.status ?? "");
+    core.setOutput('unreleasedDescription', unreleasedEntry?.description ?? "");
+  } else {
+    // Clear unreleased outputs when requesting unreleased version
+    core.setOutput('unreleasedVersion', "");
+    core.setOutput('unreleasedStatus', "");
+    core.setOutput('unreleasedDescription', "");
   }
 }
 

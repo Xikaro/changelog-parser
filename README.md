@@ -19,10 +19,10 @@
 - `date` - Release date from the changelog entry. Example: `2020-08-22`.
 - `status` - Status from the changelog entry. One of: (`prerelease`, `release`, `unreleased`).
 - `description` - Content from the changelog entry found.
-- `unreleased` - JSON object with Unreleased version data (only when `version` input is provided). Contains:
-  - `version` - Always "unreleased"
-  - `status` - Always "unreleased"
-  - `description` - Content from the Unreleased section
+- `hasUnreleased` - `true` if changelog has an Unreleased section, `false` otherwise.
+- `unreleasedVersion` - Version from the Unreleased section (always "unreleased"). Empty if `version` input is "unreleased".
+- `unreleasedStatus` - Status from the Unreleased section (always "unreleased"). Empty if `version` input is "unreleased".
+- `unreleasedDescription` - Content from the Unreleased section. Empty if `version` input is "unreleased".
 
 ### Example
 Typical `README.md` file:
@@ -72,7 +72,10 @@ versionPatch: "1"
 date: "2020-10-10"
 status: "release"
 description: "### Changed\n- Fixed small bug"
-unreleased: '{"version":"unreleased","status":"unreleased","description":"### Added\\n- Another important feature"}'
+hasUnreleased: "true"
+unreleasedVersion: "unreleased"
+unreleasedStatus: "unreleased"
+unreleasedDescription: "### Added\n- Another important feature"
 ```
 
 ## Sample usage in actions
@@ -187,12 +190,37 @@ jobs:
         with:
           version: ${{ github.ref_name }}
       - name: Check unreleased changes
+        if: steps.changelog.outputs.hasUnreleased == 'true'
         run: |
           echo "Released version: ${{ steps.changelog.outputs.version }}"
-          echo "Unreleased data: ${{ steps.changelog.outputs.unreleased }}"
-          # Parse JSON to check if there are unreleased changes
-          UNRELEASED_DESC=$(echo '${{ steps.changelog.outputs.unreleased }}' | jq -r '.description')
-          if [ -n "$UNRELEASED_DESC" ]; then
-            echo "There are unreleased changes!"
-          fi
+          echo "Has unreleased: ${{ steps.changelog.outputs.hasUnreleased }}"
+          echo "Unreleased version: ${{ steps.changelog.outputs.unreleasedVersion }}"
+          echo "Unreleased status: ${{ steps.changelog.outputs.unreleasedStatus }}"
+          echo "Unreleased description:"
+          echo "${{ steps.changelog.outputs.unreleasedDescription }}"
+```
+
+When requesting the `unreleased` version directly, the unreleased outputs are empty:
+
+```yaml
+name: Get Unreleased Entry
+
+on: [ push ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Parse Unreleased section
+        id: changelog
+        uses: Xikaro/parse-changelog@v1.1.0
+        with:
+          version: unreleased
+      - name: Show unreleased data
+        run: |
+          echo "Version: ${{ steps.changelog.outputs.version }}"
+          # unreleasedVersion, unreleasedStatus, unreleasedDescription will be empty
+          echo "Description: ${{ steps.changelog.outputs.description }}"
 ```

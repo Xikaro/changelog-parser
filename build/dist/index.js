@@ -27448,18 +27448,30 @@ async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Date: "${entry?.date ?? ""}"`);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Status: "${entry?.status ?? ""}"`);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Description:\n${entry?.description ?? ""}\n`);
+    // Always check for unreleased section, but only output if version input is not 'unreleased'
     let unreleasedEntry;
-    if (version !== undefined) {
+    try {
         unreleasedEntry = await new _Action__WEBPACK_IMPORTED_MODULE_1__.Action().run('unreleased', path);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Unreleased Version: "${unreleasedEntry?.version ?? ""}"`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`  Major: "${unreleasedEntry?.versionMajor ?? ""}"`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`  Minor: "${unreleasedEntry?.versionMinor ?? ""}"`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`  Patch: "${unreleasedEntry?.versionPatch ?? ""}"`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Date: "${unreleasedEntry?.date ?? ""}"`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Status: "${unreleasedEntry?.status ?? ""}"`);
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Description:\n${unreleasedEntry?.description ?? ""}\n`);
+    }
+    catch {
+        // No unreleased section in changelog
+        unreleasedEntry = undefined;
+    }
+    const hasUnreleased = unreleasedEntry !== undefined;
+    const isUnreleasedRequested = version?.toLowerCase() === 'unreleased';
+    if (hasUnreleased) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Has Unreleased section: ${hasUnreleased}`);
+        if (!isUnreleasedRequested) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Unreleased Version: "${unreleasedEntry?.version ?? ""}"`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Status: "${unreleasedEntry?.status ?? ""}"`);
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.info(`Description:\n${unreleasedEntry?.description ?? ""}\n`);
+        }
+    }
+    else {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.info('No Unreleased section in changelog');
     }
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.endGroup();
+    // Set main outputs
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('version', entry?.version ?? "");
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('versionMajor', entry?.versionMajor ?? "");
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('versionMinor', entry?.versionMinor ?? "");
@@ -27467,12 +27479,18 @@ async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('date', entry?.date ?? "");
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('status', entry?.status ?? "");
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('description', entry?.description ?? "");
-    if (unreleasedEntry !== undefined) {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleased', JSON.stringify({
-            version: unreleasedEntry.version ?? "",
-            status: unreleasedEntry.status ?? "",
-            description: unreleasedEntry.description ?? ""
-        }));
+    // Set unreleased outputs only if version input is not 'unreleased'
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('hasUnreleased', hasUnreleased.toString());
+    if (!isUnreleasedRequested) {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleasedVersion', unreleasedEntry?.version ?? "");
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleasedStatus', unreleasedEntry?.status ?? "");
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleasedDescription', unreleasedEntry?.description ?? "");
+    }
+    else {
+        // Clear unreleased outputs when requesting unreleased version
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleasedVersion', "");
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleasedStatus', "");
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput('unreleasedDescription', "");
     }
 }
 async function main() {
