@@ -1,22 +1,22 @@
 {
-  "name": "changelog-parser-action",
+  "name": "action-changelog-parser",
   "version": "1.2.0",
   "description": "Github action that parses changelog",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coditory/changelog-parser-action.git"
+    "url": "git+https://github.com/xikaro/action-changelog-parser.git"
   },
   "keywords": [
     "actions",
     "changelog-parser",
     "changelog"
   ],
-  "author": "coditory",
+  "author": "xikaro",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/coditory/changelog-parser-action/issues"
+    "url": "https://github.com/xikaro/action-changelog-parser/issues"
   },
-  "homepage": "https://github.com/coditory/changelog-parser-action#readme",
+  "homepage": "https://github.com/xikaro/action-changelog-parser#readme",
   "main": "build/js/main.js",
   "type": "module",
   "scripts": {

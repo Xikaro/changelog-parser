@@ -38,8 +38,8 @@ jobs:
         shell: bash
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "Coditory CI"
-            git config user.email "Coditory CI <admin@coditory.com>"
+            git config user.name "xikaro CI"
+            git config user.email "xikaro CI <admin@xikaro.com>"
             git add -A
             git commit -a -m "Publish dist" -m "[ci-skip]"
             git push origin master

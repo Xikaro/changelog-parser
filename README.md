@@ -46,10 +46,10 @@ Some description
 ### Added
 - Initialized project
 
-[Unreleased]: https://github.com/coditory/changelog-parser-action/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/coditory/changelog-parser-action/compare/v0.1.1...v0.2.0
-[0.1.1]: https://github.com/coditory/changelog-parser-action/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/coditory/changelog-parser-action/releases/tag/v0.1.0
+[Unreleased]: https://github.com/xikaro/action-changelog-parser/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/xikaro/action-changelog-parser/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/xikaro/action-changelog-parser/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/xikaro/action-changelog-parser/releases/tag/v0.1.0
 ```
 
 Action executed with no inputs
