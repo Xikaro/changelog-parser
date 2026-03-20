@@ -25,6 +25,9 @@ async function run(): Promise<void> {
     unreleasedEntry = undefined;
   }
 
+  // Get last entry (the last physical entry in the changelog file)
+  const lastEntry = await new Action().getLastEntry(path);
+
   const hasUnreleased = unreleasedEntry !== undefined;
   const isUnreleasedRequested = version?.toLowerCase() === 'unreleased';
 
@@ -38,6 +41,10 @@ async function run(): Promise<void> {
   } else {
     core.info('No Unreleased section in changelog');
   }
+
+  core.info(`Last Entry Version: "${lastEntry?.version ?? ""}"`);
+  core.info(`Last Entry Status: "${lastEntry?.status ?? ""}"`);
+  core.info(`Last Entry Description:\n${lastEntry?.description ?? ""}\n`);
 
   core.endGroup();
 
@@ -62,6 +69,15 @@ async function run(): Promise<void> {
     core.setOutput('unreleasedStatus', "");
     core.setOutput('unreleasedDescription', "");
   }
+
+  // Set last entry outputs
+  core.setOutput('lastVersion', lastEntry?.version ?? "");
+  core.setOutput('lastVersionMajor', lastEntry?.versionMajor ?? "");
+  core.setOutput('lastVersionMinor', lastEntry?.versionMinor ?? "");
+  core.setOutput('lastVersionPatch', lastEntry?.versionPatch ?? "");
+  core.setOutput('lastDate', lastEntry?.date ?? "");
+  core.setOutput('lastStatus', lastEntry?.status ?? "");
+  core.setOutput('lastDescription', lastEntry?.description ?? "");
 }
 
 async function main(): Promise<void> {

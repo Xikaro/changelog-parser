@@ -32,6 +32,10 @@ export class Changelog {
   getEntries(): ChangelogEntry[] {
     return [...this.entries];
   }
+
+  getLastEntry(): ChangelogEntry | undefined {
+    return this.entries.length > 0 ? this.entries[this.entries.length - 1] : undefined;
+  }
 }
 
 export interface ChangelogEntry {

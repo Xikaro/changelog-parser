@@ -16,4 +16,11 @@ export class Action {
       ? changelog.getByVersion(version)
       : changelog.getLatestVersion();
   }
+
+  async getLastEntry(path?: string | undefined): Promise<ChangelogEntry | undefined> {
+    const changelogContent = await new ChangelogReader(this.basedir)
+      .readChangelog(path);
+    const changelog = ChangelogParser.parseChangelog(changelogContent);
+    return changelog.getLastEntry();
+  }
 }

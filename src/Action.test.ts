@@ -81,3 +81,46 @@ test('should throw error on missing entry', async () => {
     expect((e as Error).message).toEqual("Could not find CHANGELOG entry for version: 0.0.1");
   }
 });
+
+test('should return last entry with Unreleased section', async () => {
+  await writeChangelog([
+    "## Unreleased",
+    "### Changes",
+    "- New features",
+    "",
+    "## [3.0.2] - 19-03-2026",
+    "### Changes",
+    "- The beginning of the story"
+  ]);
+  const entry = await action.getLastEntry();
+  expect(entry?.version).toBe("3.0.2");
+  expect(entry?.status).toBe("release");
+  expect(entry?.date).toBe("19-03-2026");
+});
+
+test('should return last entry without Unreleased section', async () => {
+  await writeChangelog([
+    "## [3.0.2] - 19-03-2026",
+    "### Changes",
+    "- The beginning of the story",
+    "",
+    "## [2.0.0] - 18-03-2026",
+    "### Changes",
+    "- Previous release"
+  ]);
+  const entry = await action.getLastEntry();
+  expect(entry?.version).toBe("2.0.0");
+  expect(entry?.status).toBe("release");
+  expect(entry?.date).toBe("18-03-2026");
+});
+
+test('should return last entry when only Unreleased exists', async () => {
+  await writeChangelog([
+    "## Unreleased",
+    "### Changes",
+    "- Work in progress"
+  ]);
+  const entry = await action.getLastEntry();
+  expect(entry?.version).toBe("unreleased");
+  expect(entry?.status).toBe("unreleased");
+});

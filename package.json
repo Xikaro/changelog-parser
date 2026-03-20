@@ -1,6 +1,6 @@
 {
   "name": "action-changelog-parser",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Github action that parses changelog",
   "repository": {
     "type": "git",
@@ -21,12 +21,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "build-cjs": "tsc -p tsconfig-cjs.json",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --out build/dist --license licenses.txt",
+    "package": "ncc build build/js-cjs/main.js --source-map --out build/dist --license licenses.txt && node -e \"require('fs').unlinkSync('build/dist/package.json')\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "coveralls": "cat ./build/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "ci": "npm run lint && npm run coverage && npm run build && npm run package"
+    "ci": "npm run lint && npm run coverage && npm run build && npm run build-cjs && npm run package"
   },
   "dependencies": {
     "@actions/core": "^1.11.1"
