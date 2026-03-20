@@ -113,7 +113,7 @@ jobs:
         run: echo "version=$(git describe --abbrev=0 --tags --match 'v[0-9]*\.[0-9]*\.[0-9]*' | cut -c2-)" >> $GITHUB_OUTPUT
       - name: Parse Changelog Entry
         id: changelog
-        uses: Xikaro/parse-changelog@v1.1.0
+        uses: Xikaro/action-changelog-parser@v1.1.0
       - name: Release
         if: "github.ref == 'refs/heads/master' && steps.changelog.outputs.version != steps.lasttag.outputs.version"
         env:
@@ -155,7 +155,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Parse Changelog Entry
         id: changelog
-        uses: Xikaro/parse-changelog@v1.1.0
+        uses: Xikaro/action-changelog-parser@v1.1.0
         with:
           version: ${{ steps.lasttag.outputs.version }}
       - name: Create GitHub Release
@@ -186,7 +186,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Parse latest released version
         id: changelog
-        uses: Xikaro/parse-changelog@v1.1.0
+        uses: Xikaro/action-changelog-parser@v1.1.0
         with:
           version: ${{ github.ref_name }}
       - name: Check unreleased changes
@@ -215,7 +215,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Parse Unreleased section
         id: changelog
-        uses: Xikaro/parse-changelog@v1.1.0
+        uses: Xikaro/action-changelog-parser@v1.1.0
         with:
           version: unreleased
       - name: Show unreleased data
