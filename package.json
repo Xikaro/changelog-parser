@@ -1,6 +1,6 @@
 {
   "name": "action-changelog-parser",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Github action that parses changelog",
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
     "build": "tsc",
     "build-cjs": "tsc -p tsconfig-cjs.json",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build build/js-cjs/main.js --source-map --out build/dist --license licenses.txt && node -e \"require('fs').unlinkSync('build/dist/package.json')\"",
+    "package": "ncc build build/js-cjs/main.js --source-map --out build/dist --license licenses.txt && node -e \"const fs=require('fs'); if(fs.existsSync('build/dist/package.json')) fs.unlinkSync('build/dist/package.json'); fs.renameSync('build/dist/index.js', 'build/dist/index.cjs'); fs.renameSync('build/dist/index.js.map', 'build/dist/index.cjs.map')\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "coveralls": "cat ./build/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
