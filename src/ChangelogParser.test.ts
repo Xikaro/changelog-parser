@@ -230,7 +230,7 @@ test("should parse CHANGELOG without dates", () => {
     });
   });
 
-test('should throw error on undefined entry header', async () => {
+test('should throw error on undefined entry header', () => {
   expect.assertions(1);
   try {
     ChangelogParser.parseChangelog("## something");
@@ -239,12 +239,12 @@ test('should throw error on undefined entry header', async () => {
   }
 });
 
-test('should return empty entries when changelog is empty', async () => {
+test('should return empty entries when changelog is empty', () => {
   const changelog = ChangelogParser.parseChangelog("");
   expect(changelog.getEntries()).toStrictEqual([]);
 });
 
-test('should return empty entries when changelog has no version headers', async () => {
+test('should return empty entries when changelog has no version headers', () => {
   const changelog = ChangelogParser.parseChangelog([
     "# Changelog",
     "Some notice"
@@ -252,7 +252,7 @@ test('should return empty entries when changelog has no version headers', async 
   expect(changelog.getEntries()).toStrictEqual([]);
 });
 
-test('should throw error on duplicated versions', async () => {
+test('should throw error on duplicated versions', () => {
   expect.assertions(1);
   try {
     ChangelogParser.parseChangelog([

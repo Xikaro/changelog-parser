@@ -9,7 +9,7 @@ export class ChangelogReader {
     "changelog",
   ];
 
-  constructor(private readonly basedir: string = "./") {}
+  constructor(private readonly basedir: string) { }
 
   async readChangelog(filePath: string|undefined): Promise<string> {
     if (filePath === undefined) {

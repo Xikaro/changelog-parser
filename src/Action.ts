@@ -3,11 +3,11 @@ import { ChangelogReader } from "./ChangelogReader";
 import { ChangelogParser } from "./ChangelogParser";
 
 export class Action {
-  constructor(private readonly basedir: string = "./") {}
+  constructor(private readonly basedir: string) { }
 
   async run(
-    version?: string | undefined,
-    path?: string | undefined
+    version?: string,
+    path?: string
   ): Promise<ChangelogEntry | undefined> {
     const changelogContent = await new ChangelogReader(this.basedir)
       .readChangelog(path);
@@ -17,7 +17,7 @@ export class Action {
       : changelog.getLatestVersion();
   }
 
-  async getLastEntry(path?: string | undefined): Promise<ChangelogEntry | undefined> {
+  async getLastEntry(path?: string): Promise<ChangelogEntry | undefined> {
     const changelogContent = await new ChangelogReader(this.basedir)
       .readChangelog(path);
     const changelog = ChangelogParser.parseChangelog(changelogContent);

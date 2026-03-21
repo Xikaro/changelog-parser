@@ -7,7 +7,8 @@ async function run(): Promise<void> {
   const version = core.getInput('version') || undefined;
 
   core.startGroup('Parse CHANGELOG');
-  const entry = await new Action().run(version, path);
+  const action = new Action('.');
+  const entry = await action.run(version, path);
   core.info(`Version: "${entry?.version ?? ""}"`);
   core.info(`  Major: "${entry?.versionMajor ?? ""}"`);
   core.info(`  Minor: "${entry?.versionMinor ?? ""}"`);
@@ -19,14 +20,14 @@ async function run(): Promise<void> {
   // Always check for unreleased section, but only output if version input is not 'unreleased'
   let unreleasedEntry: ChangelogEntry | undefined;
   try {
-    unreleasedEntry = await new Action().run('unreleased', path);
+    unreleasedEntry = await action.run('unreleased', path);
   } catch {
     // No unreleased section in changelog
     unreleasedEntry = undefined;
   }
 
   // Get last entry (the last physical entry in the changelog file)
-  const lastEntry = await new Action().getLastEntry(path);
+  const lastEntry = await action.getLastEntry(path);
 
   const hasUnreleased = unreleasedEntry !== undefined;
   const isUnreleasedRequested = version?.toLowerCase() === 'unreleased';
@@ -89,4 +90,4 @@ async function main(): Promise<void> {
   }
 }
 
-main();
+void main();
