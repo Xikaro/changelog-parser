@@ -29,16 +29,6 @@ outputs:
     description: 'Description from the changelog entry'
   lastVersion:
     description: 'Version from the last changelog entry (Unreleased if exists, otherwise the last released version)'
-  lastVersionMajor:
-    description: 'The major version part of the last entry'
-  lastVersionMinor:
-    description: 'The minor version part of the last entry'
-  lastVersionPatch:
-    description: 'The patch version part of the last entry'
-  lastDate:
-    description: 'Release date from the last changelog entry'
-  lastStatus:
-    description: 'Status from the last changelog entry (unreleased, prerelease, or release)'
   lastDescription:
     description: 'Description from the last changelog entry'
 runs:
